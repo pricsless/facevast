@@ -1,0 +1,17 @@
+
+apt update && \
+apt -y install git curl wget ffmpeg mesa-va-drivers && \
+curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+bash Miniconda3-latest-Linux-x86_64.sh && \
+conda init --all && \
+conda create --name facevast python=3.12 pip=25.0 -y && \
+conda activate facevast && \
+conda install -y nvidia/label/cuda-12.9.1::cuda-runtime nvidia/label/cudnn-9.10.0::cudnn && \
+pip install tensorrt==10.0.1 --extra-index-url https://pypi.nvidia.com && \
+git clone https://github.com/pricsless/facevast && \
+cd facevast && \
+python install.py --onnxruntime cuda && \
+pip install "numpy>=1.23.5,<2.3" && \
+conda deactivate && \
+conda activate facevast && \
+python facefusion.py run --open-browser
