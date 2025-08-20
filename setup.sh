@@ -1,44 +1,16 @@
-#!/bin/bash
-set -e
-
-# Install system dependencies (auto yes)
-apt install git-all -y
-
-apt install curl -y
-
-apt install ffmpeg -y
-
-# Download Miniconda
-curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-
-# Install Miniconda (batch mode, no prompts)
-bash Miniconda3-latest-Linux-x86_64.sh -b
-
-# Initialize conda
-conda init --all
-
-# Source conda setup to make it available in current script
-source ~/.bashrc
-
-# Create environment (auto yes)
-conda create -n facevast "python==3.12" pip=25.0 -y
-
-# Activate environment
-conda activate facevast
-
-# Install CUDA/cuDNN (auto yes)
-conda install nvidia/label/cuda-12.9.1::cuda-runtime nvidia/label/cudnn-9.10.0::cudnn -y
-
-# Install TensorRT
-pip install tensorrt==10.12.0.36 --extra-index-url https://pypi.nvidia.com
-
-# Run install script
-python install.py --onnxruntime cuda
-
-# Reload environment
-conda deactivate
-
-conda activate facevast
-
-# Run app
+apt update && \
+apt -y install git curl wget ffmpeg mesa-va-drivers && \
+curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+bash Miniconda3-latest-Linux-x86_64.sh -b && \
+conda init --all && \
+conda create --name facevast python=3.12 pip=25.0 -y && \
+conda activate facevast && \
+conda install nvidia/label/cuda-12.9.1::cuda-runtime nvidia/label/cudnn-9.10.0::cudnn -y && \
+pip install tensorrt==10.12.0.36 --extra-index-url https://pypi.nvidia.com && \
+git clone https://github.com/pricsless/facevast && \
+cd facevast && \
+python install.py --onnxruntime cuda && \
+pip install "numpy>=1.23.5,<2.3" && \
+conda deactivate && \
+conda activate facevast && \
 python facefusion.py run --open-browser
