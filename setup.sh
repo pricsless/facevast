@@ -23,12 +23,7 @@ conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/ma
 conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
 
 # Create env (auto yes)
-conda create --name facevast python=3.12 pip=25.0 -y
-conda activate facevast
-
-# Create env (auto yes)
-conda create --name facevast python=3.12 pip=25.0 -y
-conda activate facevast
+conda create -n facevast "python==3.12.*" pip=25.0 -y
 
 # Install CUDA + cuDNN (auto yes)
 conda install -y nvidia/label/cuda-12.9.1::cuda-runtime nvidia/label/cudnn-9.10.0::cudnn
