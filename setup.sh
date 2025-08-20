@@ -14,9 +14,6 @@ export PATH="$HOME/miniconda/bin:$PATH"
 source $HOME/miniconda/etc/profile.d/conda.sh
 conda init --all
 
-# Initialize conda
-source $HOME/miniconda/etc/profile.d/conda.sh
-conda init --all
 
 # Accept ToS so conda won't block
 conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main

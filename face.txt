@@ -15,3 +15,6 @@ pip install "numpy>=1.23.5,<2.3" && \
 conda deactivate && \
 conda activate facevast && \
 python facefusion.py run --open-browser
+
+
+git clone https://github.com/pricsless/facevast && cd facevast && ./setup.sh
