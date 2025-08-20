@@ -17,6 +17,9 @@ bash Miniconda3-latest-Linux-x86_64.sh -b
 # Initialize conda
 conda init --all
 
+# Source conda setup to make it available in current script
+source ~/.bashrc
+
 # Create environment (auto yes)
 conda create -n facevast "python==3.12" pip=25.0 -y
 
