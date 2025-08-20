@@ -1,43 +1,41 @@
 #!/bin/bash
 set -e
 
-# Update system and install dependencies
-apt update && \
-apt -y install git curl wget ffmpeg mesa-va-drivers
+# Install system dependencies (auto yes)
+apt install git-all -y
 
-# Install Miniconda (silent mode, no prompts)
+apt install curl -y
+
+apt install ffmpeg -y
+
+# Download Miniconda
 curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda
-export PATH="$HOME/miniconda/bin:$PATH"
 
-# Initialize conda and reload shell
-source $HOME/miniconda/etc/profile.d/conda.sh
-conda init bash
-# Note: In a script, conda init may not take effect immediately
+# Install Miniconda (batch mode, no prompts)
+bash Miniconda3-latest-Linux-x86_64.sh -b
 
-# Accept ToS so conda won't block
-conda config --set channel_priority flexible  # Helps with dependency resolution
-conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main || true
-conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r || true
+# Initialize conda
+conda init --all
 
-# Create and activate environment
-conda create -n facevast "python==3.12.*" pip=25.0 -y
+# Create environment (auto yes)
+conda create -n facevast "python==3.12" pip=25.0 -y
+
+# Activate environment
 conda activate facevast
 
-# Verify we're in the right environment
-echo "Active environment: $CONDA_DEFAULT_ENV"
+# Install CUDA/cuDNN (auto yes)
+conda install nvidia/label/cuda-12.9.1::cuda-runtime nvidia/label/cudnn-9.10.0::cudnn -y
 
-
-# Install CUDA + cuDNN in the activated environment
-conda install -y nvidia/label/cuda-12.9.1::cuda-runtime nvidia/label/cudnn-9.10.0::cudnn
-
-# Install TensorRT (check compatibility first)
+# Install TensorRT
 pip install tensorrt==10.12.0.36 --extra-index-url https://pypi.nvidia.com
 
-# Run install script inside repo
+# Run install script
 python install.py --onnxruntime cuda
 
-# Fix numpy version (might conflict with other packages)
-pip install "numpy>=1.23.5,<2.3"
+# Reload environment
+conda deactivate
 
+conda activate facevast
+
+# Run app
 python facefusion.py run --open-browser
